@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      margin-top: 200px;
+    }
+    .stopwatch {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+    }
+    #display {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+    button {
+      font-size: 1em;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    ul {
+      text-align: left;
+      margin-top: 10px;
+      padding: 0;
+    }
+    li {
+      list-style: none;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="stopwatch">
+    <div id="display">00:00:00.000</div>
+    <button onclick="start()">Start</button>
+    <button onclick="pause()">Pause</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="lap()">Lap</button>
+    <ul id="laps"></ul>
+  </div>
+  <script>
+    var startTime;
+    var elapsedTime = 0;
+    var timerInterval;
+
+    function printTime() {
+      var time = elapsedTime;
+      var hours = Math.floor(time / 3600000);
+      time = time % 3600000;
+      var minutes = Math.floor(time / 60000);
+      time = time % 60000;
+      var seconds = Math.floor(time / 1000);
+      var milliseconds = time % 1000;
+
+      document.getElementById('display').innerHTML = 
+        ('0' + hours).slice(-2) + ':' + 
+        ('0' + minutes).slice(-2) + ':' + 
+        ('0' + seconds).slice(-2) + '.' + 
+        ('00' + milliseconds).slice(-3);
+    }
+
+    function start() {
+      startTime = Date.now() - elapsedTime;
+      timerInterval = setInterval(function() {
+        elapsedTime = Date.now() - startTime;
+        printTime();
+      }, 10);
+    }
+
+    function pause() {
+      clearInterval(timerInterval);
+    }
+
+    function reset() {
+      clearInterval(timerInterval);
+      elapsedTime = 0;
+      printTime();
+      document.getElementById('laps').innerHTML = '';
+    }
+
+    function lap() {
+      var li = document.createElement('li');
+      li.innerText = document.getElementById('display').innerText;
+      document.getElementById('laps').appendChild(li);
+    }
+  </script>
+</body>
+</html>
